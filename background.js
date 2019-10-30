@@ -1,11 +1,8 @@
-
-
 var domains = ["www.awin1.com", "www.dwin1.com", "www.zenaps.com"];
 var search = ['sread.php', 'sread.js', 'sread.img'];
 var arr = [];
 var page = 0;
 var storedCookies = {'First':/_aw_m_\d+/,'Third':/aw\d+/,'S2S':'','Other':''};
-
 
 function rewriteUserAgentHeader(e) {
   try {
@@ -14,7 +11,6 @@ function rewriteUserAgentHeader(e) {
           var time = round(today.getHours()) + ":" + round(today.getMinutes());
           obj = { url: time + ' ' + e.url};
           arr.push(obj);
-          
       }
     }
     catch(err) {
@@ -44,37 +40,29 @@ function onError(error) {
 }
 
 function handleMessage(request, sender, sendResponse){ 
-  if(request.type == 'clear'){
-    arr = [];
-    return Promise.resolve({type:'done'});
-  } else if(request.type == 'open'){
-    console.log('opeinging');
-    return Promise.resolve({'tracking':arr});
-    /*
-    return Promise.resolve(browser.tabs.query({
-      currentWindow: true,
-      active: true
-    }).then( msg => {return Promise.resolve({'tracking':arr})}));
-    */
-  } else if(request.type == 'cookiePage'){
+  switch(request.type){
+    case 'clear':
+      arr = [];
+      return Promise.resolve({type:'done'});
+    case 'open':
+      return Promise.resolve({'tracking':arr});
+    case 'cookiePage':
       page = 1;
-  } else if(request.type == 'cookieVal'){
+      break;
+    case 'cookieVal':
       if(storedCookies[request.val]!=''){
         return Promise.resolve(storedCookies[request.val]);
       }else{
         return null;
       }
-  } else if(request.type == 'store'){
-    storedCookies[request.select] = request.val;
-    console.log(storedCookies[request.select])
-    return Promise.resolve("done");
-  }else if (request.type == 'storedCookies'){
-    console.log("stored",storedCookies);
-    return Promise.resolve(storedCookies);
+    case 'store':
+      storedCookies[request.select] = request.val;
+      return Promise.resolve("done");
+    case 'done':
+      console.log("retrieve cookies");
+      return Promise.resolve(storedCookies);
   }
 }
-
-//.then(sendMessageToTabs).then(msg=>{return Promise.resolve({'cookie':msg,'tracking':arr})}));
 
 browser.runtime.onMessage.addListener(handleMessage);
 

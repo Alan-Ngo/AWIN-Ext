@@ -152,10 +152,11 @@ class Model {
     return new Blob([u8arr], { type: mime });
   }
 
+  //name needs changing
   saveCookies(c, msg) {
     var header = '';
     header += model.getFormattedDate('/', ':') + '\r\n\r\n';
-    console.log(msg);
+    //console.log(msg);
     for (var i = 0; i < c.length; i++) {
       for (var val in msg) {
         var re = new RegExp(msg[val], 'g');
@@ -164,9 +165,9 @@ class Model {
             'Name: ' + c[i]['name'] + '\r\n' +
             'Value: ' + c[i]['value'] + '\r\n' +
             'Expiry date: ' + model.getFormattedDate("/", ":", c[i]['expirationDate']) + '\r\n' +
-            'Secure: ' + c[i]['secure'] + ' ' +
-            'httpOnly: ' + c[i]['httpOnly'] + ' ' +
-            'Session: ' + c[i]['session'] + ' ';
+            'Secure:' + c[i]['secure'] + ' ' +
+            'httpOnly:' + c[i]['httpOnly'] + ' ' +
+            'Session:' + c[i]['session'] + ' ';
 
           header += val + '\r\n' + string + '\r\n\r\n';
           break;
@@ -174,10 +175,34 @@ class Model {
       }
     }
     header += '\r\n';
+    
+    var selectOrder = {'tt=ns':[],'tt=js':[],'basket':[]};
+    var all = "";
 
     for (var i = 0; i < this.obj.tracking.length; i++) {
-      header += this.obj.tracking[i].url + "\r\n";
+      for(var j=0;j<Object.keys(selectOrder).length;j++){
+        var re = new RegExp(Object.keys(selectOrder)[j], 'g');
+        if (this.obj.tracking[i].url.match(re)){
+          console.log('found one')
+          selectOrder[Object.keys(selectOrder)[j]].push(this.obj.tracking[i].url)
+        }
+      }
+      all += this.obj.tracking[i].url + "\r\n";
     }
+
+    //need to fix for multiple plt
+    for(var element in selectOrder){
+      if(element == "basket"){
+        header += decodeURI(selectOrder[element]) + "\r\n";
+      }else{
+        header += selectOrder[element] + "\r\n";
+      }
+    }
+    
+    header += "\r\n";
+
+    header+=all;
+
     this.downloads(this.createBlob(header, 'text/plain'), 'txt');
   }
 

@@ -1,6 +1,4 @@
 class Page {
-
-
   constructor(mod) {
     this.pages = ["popup-content", "cookie-content"];
     this.fields = ["tracking", "cookie"];
@@ -15,25 +13,35 @@ class Page {
     }
   }
 
-    
+
   clearTracking() {
     this.fields.forEach((field) => document.getElementById(field).innerHTML = "");
     browser.runtime.sendMessage({ type: 'clear' });
   }
 
   initialSetup() {
-    document.addEventListener("click", (e,model)=>{this.controller(e,model)});
-
     document.getElementsByClassName("buttons")[0].style = "color:white;";
     this.selectPage(true, false);
-  
-    for (var i = 0; i < document.getElementsByClassName("buttons").length; i++) {
-      document.getElementsByClassName("buttons")[i].addEventListener('click', model.selectCookie, true);
-    }
+    browser.runtime.sendMessage({ type: 'valid'}).then((msg) => {
+      console.log(msg);
+      if(msg){
+        console.log("yes it is executing");
+      
 
-    window.addEventListener('DOMContentLoaded', (event) => {
-      model.openHeaders();
+    
+        document.addEventListener("click", (e, model) => { this.controller(e, model) });
+    
+
+    
+        for (var i = 0; i < document.getElementsByClassName("buttons").length; i++) {
+          document.getElementsByClassName("buttons")[i].addEventListener('click', model.selectCookie, true);
+        }    
+
+        model.openHeaders();
+
+      }
     });
+
   }
 
   controller(e) {
@@ -67,7 +75,6 @@ class Page {
 }
 
 class Model {
-
   constructor() {
     //containing the cookie headers
     this.obj;
@@ -75,13 +82,13 @@ class Model {
     this.cookieSelect = "First";
     this.cookieType = "";
 
-   }
+  }
 
-   openHeaders(){
+  openHeaders() {
     browser.runtime.sendMessage({ type: 'open' }).then(model.headers.bind(this))
-   }
+  }
 
-   
+
   headers(msg) {
     this.obj = msg;
     //document.getElementById("cookie").innerHTML = msg.cookie;
@@ -175,14 +182,14 @@ class Model {
       }
     }
     header += '\r\n';
-    
-    var selectOrder = {'tt=ns':[],'tt=js':[],'basket':[]};
+
+    var selectOrder = { 'tt=ns': [], 'tt=js': [], 'basket': [] };
     var all = "";
 
     for (var i = 0; i < this.obj.tracking.length; i++) {
-      for(var j=0;j<Object.keys(selectOrder).length;j++){
+      for (var j = 0; j < Object.keys(selectOrder).length; j++) {
         var re = new RegExp(Object.keys(selectOrder)[j], 'g');
-        if (this.obj.tracking[i].url.match(re)){
+        if (this.obj.tracking[i].url.match(re)) {
           console.log('found one')
           selectOrder[Object.keys(selectOrder)[j]].push(this.obj.tracking[i].url)
         }
@@ -191,17 +198,17 @@ class Model {
     }
 
     //need to fix for multiple plt
-    for(var element in selectOrder){
-      if(element == "basket"){
+    for (var element in selectOrder) {
+      if (element == "basket") {
         header += decodeURI(selectOrder[element]) + "\r\n";
-      }else{
+      } else {
         header += selectOrder[element] + "\r\n";
       }
     }
-    
+
     header += "\r\n";
 
-    header+=all;
+    header += all;
 
     this.downloads(this.createBlob(header, 'text/plain'), 'txt');
   }
@@ -303,7 +310,7 @@ class Model {
     browser.runtime.sendMessage({ type: 'store', select: this.cookieSelect, val: e.target.name }).then((msg) => {
       page.selectPage(true, false);
       //refresh cookie
-      browser.runtime.sendMessage({ type: 'cookieVal', val: this.cookieSelect }).then((msg) => { browser.cookies.getAll({}).then((c) => {model.checkCookies(c, msg)}) });
+      browser.runtime.sendMessage({ type: 'cookieVal', val: this.cookieSelect }).then((msg) => { browser.cookies.getAll({}).then((c) => { model.checkCookies(c, msg) }) });
     });
   }
   checkCookies(c, val) {
@@ -311,17 +318,15 @@ class Model {
     //browser.runtime.sendMessage({type:'cookieVal',val:cookieSelect}).then(changeCookie);
     if (val != null) {
       for (var i = 0; i < c.length; i++) {
-        
+
         var re = new RegExp(val, 'g');
         if (c[i]["name"].match(re)) {
-          console.log("yes");
-          console.log(c[i]["name"]);
           ind = i;
           break;
         }
       }
 
-      
+
       var string = '<div> ' +
         '<b>Name:</b> ' + c[ind]['name'] + '</br>' +
         '<b>Value:</b> ' + c[ind]['value'] + '</br>' +
@@ -330,7 +335,7 @@ class Model {
         '<b>httpOnly:</b> ' + model.checkbox(c[ind]['httpOnly']) + ' ' +
         '<b>Session:</b> ' + model.checkbox(c[ind]['session']) + ' ' +
         '</div></br>';
-      
+
       document.getElementById("cookie").innerHTML = string;
     }
     else {
@@ -349,7 +354,7 @@ class Model {
       }
     }
     //get the correct value to populate
-    browser.runtime.sendMessage({ type: 'cookieVal', val: this.cookieSelect }).then((msg)=>{browser.cookies.getAll({}).then((c)=>model.checkCookies(c,msg))})
+    browser.runtime.sendMessage({ type: 'cookieVal', val: this.cookieSelect }).then((msg) => { browser.cookies.getAll({}).then((c) => model.checkCookies(c, msg)) })
   }
 
   changeCookie(msg) {

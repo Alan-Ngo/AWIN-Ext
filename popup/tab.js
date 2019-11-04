@@ -1,18 +1,16 @@
 class Page {
   constructor(mod) {
-    this.pages = ["popup-content", "cookie-content"];
+    this.pages = ["popup-content", "cookie-content","debug-content"];
     this.fields = ["tracking", "cookie"];
     this.m = mod;
-    console.log(this.m);
     this.initialSetup();
   }
 
-  selectPage(...args) {
-    for (var i = 0; i < args.length; i++) {
-      document.getElementById(this.pages[i]).style.display = args[i] ? "grid" : "none";
+  selectPage(pageNum) {
+    for (var i = 0; i < this.pages.length; i++) {
+      document.getElementById(this.pages[i]).style.display = (pageNum==i) ? "grid" : "none";
     }
   }
-
 
   clearTracking() {
     this.fields.forEach((field) => document.getElementById(field).innerHTML = "");
@@ -21,27 +19,24 @@ class Page {
 
   initialSetup() {
     document.getElementsByClassName("buttons")[0].style = "color:white;";
-    this.selectPage(true, false);
+    this.selectPage(0);
+
+    document.getElementById('debug').onclick = ()=>{
+      this.selectPage(2)
+    };
+
     browser.runtime.sendMessage({ type: 'valid'}).then((msg) => {
       console.log(msg);
       if(msg){
-        console.log("yes it is executing");
-      
-
-    
         document.addEventListener("click", (e, model) => { this.controller(e, model) });
-    
 
-    
         for (var i = 0; i < document.getElementsByClassName("buttons").length; i++) {
           document.getElementsByClassName("buttons")[i].addEventListener('click', model.selectCookie, true);
         }    
 
         model.openHeaders();
-
       }
     });
-
   }
 
   controller(e) {
@@ -65,10 +60,14 @@ class Page {
         model.openCookie();
         break;
       case "back":
-        this.selectPage(true, false);
+        document.getElementById('debug').checked=false;
+        this.selectPage(0);
         break;
       case "selectCookie":
         model.storeCookie(e);
+        break;
+      case "debug":
+
         break;
     }
   }
@@ -87,7 +86,6 @@ class Model {
   openHeaders() {
     browser.runtime.sendMessage({ type: 'open' }).then(model.headers.bind(this))
   }
-
 
   headers(msg) {
     this.obj = msg;
@@ -163,7 +161,6 @@ class Model {
   saveCookies(c, msg) {
     var header = '';
     header += model.getFormattedDate('/', ':') + '\r\n\r\n';
-    //console.log(msg);
     for (var i = 0; i < c.length; i++) {
       for (var val in msg) {
         var re = new RegExp(msg[val], 'g');
@@ -301,21 +298,20 @@ class Model {
   }
 
   openCookie() {
-    page.selectPage(false, true);
+    page.selectPage(1);
     browser.cookies.getAll({}).then(this.getCookies);
   }
 
   storeCookie(e) {
     //send to background to store name
     browser.runtime.sendMessage({ type: 'store', select: this.cookieSelect, val: e.target.name }).then((msg) => {
-      page.selectPage(true, false);
+      page.selectPage(0);
       //refresh cookie
       browser.runtime.sendMessage({ type: 'cookieVal', val: this.cookieSelect }).then((msg) => { browser.cookies.getAll({}).then((c) => { model.checkCookies(c, msg) }) });
     });
   }
   checkCookies(c, val) {
     var ind = null;
-    //browser.runtime.sendMessage({type:'cookieVal',val:cookieSelect}).then(changeCookie);
     if (val != null) {
       for (var i = 0; i < c.length; i++) {
 
@@ -365,7 +361,6 @@ class Model {
     console.error(`Error: ${error}`);
   }
 }
-
 
 var model = new Model();
 var page = new Page(model);

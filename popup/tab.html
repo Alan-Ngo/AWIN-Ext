@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="tab.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7190776/6563572/css/fonts.css">
-    <link href="https://fonts.googleapis.com/css?family=Be+Vietnam|Roboto&display=swap" rel="stylesheet"> 
-  </head>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="tab.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+  <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7190776/6563572/css/fonts.css">
+  <link href="https://fonts.googleapis.com/css?family=Be+Vietnam|Roboto&display=swap" rel="stylesheet">
+</head>
 
 <body>
   <div id="popup-content">
@@ -17,7 +18,6 @@
           <h3>AWIN INTEGRATION</h3>
         </div>
       </div>
-
       <div style="padding:10px;">
         <div style="display: flex;text-align: center;">
           <div class="buttons">First</div>
@@ -25,58 +25,63 @@
           <div class="buttons">S2S</div>
           <div class="buttons">Other</div>
         </div>
-
         <div id="cookies">
           <div id="cookie"></div>
         </div>
-        
         <div id="t_container">
-        
           <div id="tracking"></div>
-          <input type="checkbox" name="simple" value="Y">Simplify<br/>
+          <input type="checkbox" id="debug" name="simple" value="Y">Debug<br />
           <div class="clear button extra">Clear headers</div>
         </div>
-
         <div id='f_container'>
           <div style="display: flex;">
             <div title="Screenshot" style="flex:1" class="screenshot button "><i class="fas fa-lg fa-desktop"></i></div>
             <div title="Save Header" style="flex:1" class="saveHeader button "><i class="fas fa-lg fa-code"></i></div>
             <div title="Save Page" style="flex:1" class="savePage button "><i class="fas fa-lg fa-file"></i></div>
-            <div title="Delete Cookie" style="flex:1" class="delCookie button "><i class="fas fa-lg fa-cookie-bite"></i></div>
+            <div title="Delete Cookie" style="flex:1" class="delCookie button "><i class="fas fa-lg fa-cookie-bite"></i>
+            </div>
           </div>
         </div>
       </div>
-
-
-
-  </div>
+    </div>
   </div>
 
   <div id="cookie-content">
-      <div id="main">
-        <div style="display:flex;flex-direction: row;">
-              <div style="width:10%;align-items: center;background-color: #7ec2ed;">
-                <div style="align-items: center;" >
-                  <h3 class="back fas fa-arrow-left"></h3>
-                </div>
-              </div>
-              <div style="background-color: #7ec2ed;width: 90%;">
-                <h3>Cookies</h3>
-              </div>
+    <div id="main">
+      <div style="display:flex;flex-direction: row;">
+        <div style="width:10%;align-items: center;background-color: #7ec2ed;">
+          <div style="align-items: center;">
+            <h3 class="back fas fa-arrow-left"></h3>
+          </div>
         </div>
-        
-            <div id="listCookies" style="overflow-y: scroll;height: 90%;overflow-wrap: break-word;padding:10px;">
-       
-
+        <div style="background-color: #7ec2ed;width: 90%;">
+          <h3>Cookies</h3>
         </div>
-
       </div>
-      
+      <div id="listCookies" style="overflow-y: scroll;height: 90%;overflow-wrap: break-word;padding:10px;">
+      </div>
+    </div>
+  </div>
+
+  <div id="debug-content">
+    <div id="main2">
+      <div style="display:flex;flex-direction: row;">
+        <div style="width:10%;align-items: center;background-color: #7ec2ed;">
+          <div style="align-items: center;">
+            <h3 class="back fas fa-arrow-left"></h3>
+          </div>
+        </div>
+        <div style="background-color: #7ec2ed;width: 90%;">
+          <h3>Debugging</h3>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="tab.js"></script>
 
 </body>
+
 </html>
 
 

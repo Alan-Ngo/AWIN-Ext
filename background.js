@@ -24,7 +24,6 @@ function verify(){
   fetch('https://demo3021139.mockable.io/awin')
   .then((res) => {
     if (res.ok) {
-      console.log("Okay");
       return res.json()
     }
   })

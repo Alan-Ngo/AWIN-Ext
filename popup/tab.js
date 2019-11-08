@@ -311,6 +311,7 @@ class Model {
       browser.runtime.sendMessage({ type: 'cookieVal', val: this.cookieSelect }).then((msg) => { browser.cookies.getAll({}).then((c) => { model.checkCookies(c, msg) }) });
     });
   }
+
   checkCookies(c, val) {
     var ind = null;
     if (val != null) {
@@ -323,8 +324,8 @@ class Model {
         }
       }
 
-
-      var string = '<div> ' +
+      if(ind != null){
+        var string = '<div> ' +
         '<b>Name:</b> ' + c[ind]['name'] + '</br>' +
         '<b>Value:</b> ' + c[ind]['value'] + '</br>' +
         '<b>Expiry date:</b> ' + model.getFormattedDate("/", ":", c[i]['expirationDate']) + ' ' + '<br/> ' +
@@ -333,7 +334,8 @@ class Model {
         '<b>Session:</b> ' + model.checkbox(c[ind]['session']) + ' ' +
         '</div></br>';
 
-      document.getElementById("cookie").innerHTML = string;
+        document.getElementById("cookie").innerHTML = string;
+      }
     }
     else {
       document.getElementById("cookie").innerHTML = '<button class="openCookie">Find</button>';

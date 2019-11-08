@@ -84,6 +84,7 @@ function handleMessage(request, sender, sendResponse) {
         return null;
       }
     case 'store':
+      console.log("store",storedCookies,request.select,request.val);
       storedCookies[request.select] = request.val;
       return Promise.resolve("done");
     case 'done':

@@ -30,9 +30,7 @@ class Page {
       if(msg){
         document.addEventListener("click", (e, model) => { this.controller(e, model) });
 
-        for (var i = 0; i < document.getElementsByClassName("buttons").length; i++) {
-          document.getElementsByClassName("buttons")[i].addEventListener('click', model.selectCookie, true);
-        }    
+        model.cookieEvents();
 
         model.openHeaders();
       }
@@ -45,26 +43,26 @@ class Page {
         page.clearTracking();
         break;
       case "screenshot":
-        model.screenshot();
+        this.m.screenshot();
         break;
       case "saveHeader":
-        model.saveHeaders()
+        this.m.saveHeaders()
         break;
       case "savePage":
-        model.savePage();
+        this.m.savePage();
         break;
       case "delCookie":
-        model.deleteCookie();
+        this.m.deleteCookie();
         break;
       case "openCookie":
-        model.openCookie();
+        this.m.openCookie();
         break;
       case "back":
         document.getElementById('debug').checked=false;
         this.selectPage(0);
         break;
       case "selectCookie":
-        model.storeCookie(e);
+        this.m.storeCookie(e);
         break;
       case "debug":
 
@@ -85,6 +83,12 @@ class Model {
 
   openHeaders() {
     browser.runtime.sendMessage({ type: 'open' }).then(model.headers.bind(this))
+  }
+
+  cookieEvents(){
+    for (var i = 0; i < document.getElementsByClassName("buttons").length; i++) {
+      document.getElementsByClassName("buttons")[i].addEventListener('click', model.selectCookie.bind(this), true);
+    }    
   }
 
   headers(msg) {
@@ -188,7 +192,7 @@ class Model {
         var re = new RegExp(Object.keys(selectOrder)[j], 'g');
         if (this.obj.tracking[i].url.match(re)) {
           console.log('found one')
-          selectOrder[Object.keys(selectOrder)[j]].push(this.obj.tracking[i].url)
+          selectOrder[Object.keys(selectOrder)[j]].push(decodeURI(this.obj.tracking[i].url));
         }
       }
       all += this.obj.tracking[i].url + "\r\n";
@@ -196,11 +200,7 @@ class Model {
 
     //need to fix for multiple plt
     for (var element in selectOrder) {
-      if (element == "basket") {
-        header += decodeURI(selectOrder[element]) + "\r\n";
-      } else {
-        header += selectOrder[element] + "\r\n";
-      }
+      header += selectOrder[element] + "\r\n";
     }
 
     header += "\r\n";
@@ -304,6 +304,7 @@ class Model {
 
   storeCookie(e) {
     //send to background to store name
+    console.log(this.cookieSelect,e.target.name+"storeCookie");
     browser.runtime.sendMessage({ type: 'store', select: this.cookieSelect, val: e.target.name }).then((msg) => {
       page.selectPage(0);
       //refresh cookie
@@ -340,11 +341,14 @@ class Model {
   }
 
   selectCookie(e) {
+    console.log(this);
     for (var i = 0; i < e.target.parentNode.children.length; i++) {
       if (e.target.parentNode.children[i].innerText == e.target.textContent) {
         e.target.parentNode.children[i].style.color = "white";
         //set mode
+        console.log(this.cookieSelect);
         this.cookieSelect = e.target.textContent;
+        console.log(this.cookieSelect);
       } else {
         e.target.parentNode.children[i].style.color = "black";
       }

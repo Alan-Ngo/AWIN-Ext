@@ -73,6 +73,8 @@ function handleMessage(request, sender, sendResponse) {
       arr = [];
       storedCookies['S2S']='';
       storedCookies['Other']='';
+      //need to clear cookies
+      
       return Promise.resolve({ type: 'done' });
     case 'open':
       return Promise.resolve({ 'tracking': arr });

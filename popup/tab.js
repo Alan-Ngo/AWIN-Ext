@@ -1,8 +1,8 @@
 class Page {
   constructor(mod) {
     this.pages = ["popup-content", "cookie-content","debug-content"];
-    this.fields = ["tracking"];
-    this.m = mod;
+    this.fields = ["tracking","cookie"];
+    this.model = mod;
     this.initialSetup();
   }
 
@@ -15,6 +15,7 @@ class Page {
   clearTracking() {
     this.fields.forEach((field) => document.getElementById(field).innerHTML = "");
     browser.runtime.sendMessage({ type: 'clear' });
+    this.model.deleteCookie();
   }
 
   initialSetup() {
@@ -29,10 +30,8 @@ class Page {
       console.log(msg);
       if(msg){
         document.addEventListener("click", (e, model) => { this.controller(e, model) });
-
-        model.cookieEvents();
-
-        model.openHeaders();
+        this.model.cookieEvents();
+        this.model.openHeaders();
       }
     });
   }
@@ -43,26 +42,26 @@ class Page {
         page.clearTracking();
         break;
       case "screenshot":
-        this.m.screenshot();
+        this.model.screenshot();
         break;
       case "saveHeader":
-        this.m.saveHeaders()
+        this.model.saveHeaders()
         break;
       case "savePage":
-        this.m.savePage();
+        this.model.savePage();
         break;
       case "delCookie":
-        this.m.deleteCookie();
+        this.model.deleteCookie();
         break;
       case "openCookie":
-        this.m.openCookie();
+        this.model.openCookie();
         break;
       case "back":
         document.getElementById('debug').checked=false;
         this.selectPage(0);
         break;
       case "selectCookie":
-        this.m.storeCookie(e);
+        this.model.storeCookie(e);
         break;
       case "debug":
 

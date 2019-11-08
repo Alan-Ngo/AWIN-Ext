@@ -1,7 +1,7 @@
 class Page {
   constructor(mod) {
     this.pages = ["popup-content", "cookie-content","debug-content"];
-    this.fields = ["tracking", "cookie"];
+    this.fields = ["tracking"];
     this.m = mod;
     this.initialSetup();
   }

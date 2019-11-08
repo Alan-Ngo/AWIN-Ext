@@ -5,7 +5,7 @@
   
     "description": "Awin Extension",
      "icons":{
-        "48": "Icon/awin-icon.png"
+        "48": "Icon/awin-icona.png"
      },
     "permissions": [
         "activeTab",
@@ -21,7 +21,7 @@
         "scripts": ["background.js"]
       },
       "browser_action": {
-        "default_icon": "Icon/awin-icon.png",
+        "default_icon": "Icon/awin-icona.png",
         "default_title": "Awin Extension",
         "default_popup": "popup/tab.html"
       },

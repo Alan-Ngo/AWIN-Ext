@@ -71,6 +71,8 @@ function handleMessage(request, sender, sendResponse) {
   switch (request.type) {
     case 'clear':
       arr = [];
+      storedCookies['S2S']='';
+      storedCookies['Other']='';
       return Promise.resolve({ type: 'done' });
     case 'open':
       return Promise.resolve({ 'tracking': arr });

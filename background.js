@@ -55,12 +55,11 @@ function round(val) {
 }
 
 function sendMessageToTabs(tabs) {
-  return Promise.resolve(browser.tabs.sendMessage(
+  console.log(123);
+  console.log(tabs);
+  browser.tabs.sendMessage(
     tabs[0].id,
-    { type: 'cookie' }).then((msg) => {
-      console.log('got cookie' + msg);
-      return Promise.resolve(msg);
-    }));
+    { type: 'paste' });
 }
 
 function onError(error) {
@@ -113,3 +112,33 @@ checkOpen();
 window.setInterval(function () {
   checkOpen();
 }, 1000 * 60 * 60);
+
+browser.commands.onCommand.addListener(function (command) {
+  if (command === "Shortcut1") {
+    browser.tabs.query({active: true, currentWindow: true}).then((tab)=>sendMessageToTabs(tab));
+
+    /*
+        var text="yooo";
+    var t = document.execCommand("paste", false, text);
+    console.log(t);
+    if (!selection.rangeCount) return false;
+    selection.deleteFromDocument();
+    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+
+    event.preventDefault();
+    */
+  }
+});
+
+/*
+
+navigator.clipboard.writeText("yooo wassup").then(function() {
+      console.log("Success in writing to clipboard");
+      
+      navigator.clipboard.readText().then(text => outputElem.innerText = text);
+    }, function() {
+      console.log("Failed in writing to clipboard");
+    });    
+    console.log("Toggling the feature!");
+
+    */

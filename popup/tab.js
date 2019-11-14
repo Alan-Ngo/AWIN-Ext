@@ -1,6 +1,6 @@
 class Page {
   constructor(mod) {
-    this.pages = ["popup-content", "cookie-content","debug-content"];
+    this.pages = ["popup-content", "cookie-content","debug-content","shortcut-content"];
     this.fields = ["tracking","cookie"];
     this.model = mod;
     this.initialSetup();
@@ -45,13 +45,16 @@ class Page {
         this.model.screenshot();
         break;
       case "saveHeader":
-        this.model.saveHeaders()
+        this.model.saveHeaders();
         break;
       case "savePage":
         this.model.savePage();
         break;
       case "delCookie":
-        this.model.deleteCookie();
+        this.selectPage(3);
+        var s = this.model.populateShortcut()
+        document.getElementById('shortcut').innerHTML = s;
+        //this.model.deleteCookie();
         break;
       case "openCookie":
         this.model.openCookie();
@@ -77,7 +80,17 @@ class Model {
     //Cookie selection and type
     this.cookieSelect = "First";
     this.cookieType = "";
+    this.numShortcuts = 9;
+    this.shortcuts = [];
+    this.initial();
+    //{1:'',2:'',3:'',4:'',5:'',6:'',7:'',8:'',9:''}
+  }
 
+  initial(){
+    for(var i=0;i<this.numShortcuts;i++){
+      this.shortcuts.push('');
+    }
+    console.log(this.shortcuts);
   }
 
   openHeaders() {
@@ -88,6 +101,15 @@ class Model {
     for (var i = 0; i < document.getElementsByClassName("buttons").length; i++) {
       document.getElementsByClassName("buttons")[i].addEventListener('click', model.selectCookie.bind(this), true);
     }    
+  }
+
+  populateShortcut(){
+    var s = '';
+    for(var i=0;i<this.shortcuts.length;i++){
+      s += '<b>ctrl +'+(i+1)+'</b>&nbsp;<input type="text"><button>Updates</button> <br>';  
+    }
+
+    return s;
   }
 
   headers(msg) {

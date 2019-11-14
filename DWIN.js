@@ -16,6 +16,16 @@ function handleMessage(request, sender, sendResponse) {
   } else if(request.type == 'page'){
     console.log(document.getElementsByTagName('html')[0].innerHTML);
       return Promise.resolve(document.getElementsByTagName('html')[0].innerHTML);
+  } else if (request.type == 'paste'){
+    console.log('paste working');
+    var text="yooo";
+    navigator.clipboard.writeText(text).then(function() {
+      console.log("sucessful");
+    }, function() {
+      console.log("noooooo");
+    });
+    var t = document.execCommand("paste", false, text);
+    console.log(t);
   }
 }
 

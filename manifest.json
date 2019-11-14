@@ -13,7 +13,8 @@
         "webRequest",
         "downloads",
         "cookies",
-        
+        "clipboardWrite",
+        "clipboardRead",
         "webRequestBlocking",
         "<all_urls>"
       ],
@@ -30,6 +31,13 @@
           "matches": ["*://*/*"],
           "js": ["DWIN.js"]
         }
-      ] 
+      ],
+      "commands": {
+        "Shortcut1": {
+          "suggested_key": {
+            "default": "Ctrl+L"
+          }
+        }
+      } 
   }
 

@@ -71,6 +71,16 @@ input{
   height: 100%;
 }
 
+#shortcut-content{
+  display:grid;
+  grid-template-columns: repeat(4,80px);
+  grid-template-rows: repeat(5,100px);
+  grid-column-gap:5px;
+  grid-row-gap:1px;
+  box-sizing: border-box;
+  height: 100%;
+}
+
 #c_container{
   display: flex;
   flex-direction: row;

@@ -35,9 +35,49 @@
       "commands": {
         "Shortcut1": {
           "suggested_key": {
-            "default": "Ctrl+L"
+            "default": "Ctrl+1"
           }
-        }
+        },
+        "Shortcut2": {
+          "suggested_key": {
+            "default": "Ctrl+2"
+          }
+        },
+        "Shortcut3": {
+          "suggested_key": {
+            "default": "Ctrl+3"
+          }
+        },
+        "Shortcut4": {
+          "suggested_key": {
+            "default": "Ctrl+4"
+          }
+        },
+        "Shortcut5": {
+          "suggested_key": {
+            "default": "Ctrl+5"
+          }
+        },
+        "Shortcut6": {
+          "suggested_key": {
+            "default": "Ctrl+6"
+          }
+        },
+        "Shortcut7": {
+          "suggested_key": {
+            "default": "Ctrl+7"
+          }
+        },
+        "Shortcut8": {
+          "suggested_key": {
+            "default": "Ctrl+8"
+          }
+        },
+        "Shortcut9": {
+          "suggested_key": {
+            "default": "Ctrl+9"
+          }
+        },
       } 
   }
 

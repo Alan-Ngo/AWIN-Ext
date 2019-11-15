@@ -3,8 +3,19 @@ var search = ['sread.php', 'sread.js', 'sread.img'];
 var arr = [];
 var page = 0;
 var storedCookies = { 'First': /_aw_m_\d+/, 'Third': /aw\d+/, 'S2S': '', 'Other': '' };
-
+var numShortcuts = 9;
+var shortcuts = [];
 var date, opens;
+
+initial();
+
+function initial() {
+  for (var i = 0; i < numShortcuts; i++) {
+    shortcuts.push('');
+  }
+
+  shortcuts[1] = 'yeetos';
+}
 
 function rewriteUserAgentHeader(e) {
   try {
@@ -20,29 +31,29 @@ function rewriteUserAgentHeader(e) {
   }
 }
 
-function verify(){
+function verify() {
   fetch('https://demo3021139.mockable.io/awin')
-  .then((res) => {
-    if (res.ok) {
-      return res.json()
-    }
-  })
-  .then((v) => {
-    date = new Date().getDate();
-    if (v.msg == 1) {
-      opens = true;
-    } else {
-      opens = false;
-    }
-  });
+    .then((res) => {
+      if (res.ok) {
+        return res.json()
+      }
+    })
+    .then((v) => {
+      date = new Date().getDate();
+      if (v.msg == 1) {
+        opens = true;
+      } else {
+        opens = false;
+      }
+    });
 }
 
 function checkOpen() {
-  if(date!=undefined){
-    if(parseInt(date) < parseInt(new Date().getDate())){
+  if (date != undefined) {
+    if (parseInt(date) < parseInt(new Date().getDate())) {
       verify();
     }
-  }else{
+  } else {
     verify();
   }
 }
@@ -70,10 +81,9 @@ function handleMessage(request, sender, sendResponse) {
   switch (request.type) {
     case 'clear':
       arr = [];
-      storedCookies['S2S']='';
-      storedCookies['Other']='';
+      storedCookies['S2S'] = '';
+      storedCookies['Other'] = '';
       //need to clear cookies
-      
       return Promise.resolve({ type: 'done' });
     case 'open':
       return Promise.resolve({ 'tracking': arr });
@@ -87,7 +97,7 @@ function handleMessage(request, sender, sendResponse) {
         return null;
       }
     case 'store':
-      console.log("store",storedCookies,request.select,request.val);
+      console.log("store", storedCookies, request.select, request.val);
       storedCookies[request.select] = request.val;
       return Promise.resolve("done");
     case 'done':
@@ -96,10 +106,15 @@ function handleMessage(request, sender, sendResponse) {
     case 'valid':
       console.log(opens);
       return Promise.resolve(opens);
+    case 'short':
+      console.log('shortcutsssssss', shortcuts);
+      return Promise.resolve(shortcuts);
+    case 'storeShortcuts':
+      shortcuts = request.val;
   }
 }
 
-document.addEventListener('load',()=>{console.log(123)})
+document.addEventListener('load', () => { console.log(123) })
 browser.runtime.onMessage.addListener(handleMessage);
 
 browser.webRequest.onBeforeSendHeaders.addListener(
@@ -115,7 +130,7 @@ window.setInterval(function () {
 
 browser.commands.onCommand.addListener(function (command) {
   if (command === "Shortcut1") {
-    browser.tabs.query({active: true, currentWindow: true}).then((tab)=>sendMessageToTabs(tab));
+    browser.tabs.query({ active: true, currentWindow: true }).then((tab) => sendMessageToTabs(tab));
 
     /*
         var text="yooo";
@@ -134,11 +149,11 @@ browser.commands.onCommand.addListener(function (command) {
 
 navigator.clipboard.writeText("yooo wassup").then(function() {
       console.log("Success in writing to clipboard");
-      
+
       navigator.clipboard.readText().then(text => outputElem.innerText = text);
     }, function() {
       console.log("Failed in writing to clipboard");
-    });    
+    });
     console.log("Toggling the feature!");
 
     */

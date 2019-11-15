@@ -52,8 +52,7 @@ class Page {
         break;
       case "delCookie":
         this.selectPage(3);
-        var s = this.model.populateShortcut()
-        document.getElementById('shortcut').innerHTML = s;
+        this.model.populateShortcut()
         //this.model.deleteCookie();
         break;
       case "openCookie":
@@ -80,17 +79,7 @@ class Model {
     //Cookie selection and type
     this.cookieSelect = "First";
     this.cookieType = "";
-    this.numShortcuts = 9;
-    this.shortcuts = [];
-    this.initial();
     //{1:'',2:'',3:'',4:'',5:'',6:'',7:'',8:'',9:''}
-  }
-
-  initial(){
-    for(var i=0;i<this.numShortcuts;i++){
-      this.shortcuts.push('');
-    }
-    console.log(this.shortcuts);
   }
 
   openHeaders() {
@@ -104,12 +93,27 @@ class Model {
   }
 
   populateShortcut(){
-    var s = '';
-    for(var i=0;i<this.shortcuts.length;i++){
-      s += '<b>ctrl +'+(i+1)+'</b>&nbsp;<input type="text"><button>Updates</button> <br>';  
-    }
+    browser.runtime.sendMessage({ type: 'short' }).then((msg)=>{
+      var s = '';
+      for(var i=0;i<msg.length;i++){
+        s += '<b>ctrl '+(i+1)+'</b>&nbsp;<input class="sInput" type="text" value='+msg[i]+'><button class="sButtons">Updates</button> <br>';  
+      }
 
-    return s;
+      document.getElementById('shortcut').innerHTML = s;
+
+      for(var j = 0; j<document.getElementsByClassName('sButtons').length;j++){
+        document.getElementsByClassName('sButtons')[j].addEventListener("click",this.yeet);
+      }   
+    });
+  }
+
+  yeet(){
+    var list = [];
+    for(var j = 0; j<document.getElementsByClassName('sInput').length;j++){
+      list.push(document.getElementsByClassName('sInput')[j].value);
+    }   
+    browser.runtime.sendMessage({ type: 'storeShortcuts',val: list});
+    console.log('yayyy');
   }
 
   headers(msg) {

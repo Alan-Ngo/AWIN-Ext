@@ -33,51 +33,51 @@
         }
       ],
       "commands": {
-        "Shortcut1": {
+        "Ctrl+Shift+1": {
           "suggested_key": {
-            "default": "Ctrl+1"
+            "default": "Ctrl+Shift+1"
           }
         },
-        "Shortcut2": {
+        "Ctrl+Shift+2": {
           "suggested_key": {
-            "default": "Ctrl+2"
+            "default": "Ctrl+Shift+2"
           }
         },
-        "Shortcut3": {
+        "Ctrl+Shift+3": {
           "suggested_key": {
-            "default": "Ctrl+3"
+            "default": "Ctrl+Shift+3"
           }
         },
-        "Shortcut4": {
+        "Ctrl+Shift+4": {
           "suggested_key": {
-            "default": "Ctrl+4"
+            "default": "Ctrl+Shift+4"
           }
         },
-        "Shortcut5": {
+        "Ctrl+Shift+5": {
           "suggested_key": {
-            "default": "Ctrl+5"
+            "default": "Ctrl+Shift+5"
           }
         },
-        "Shortcut6": {
+        "Ctrl+Shift+6": {
           "suggested_key": {
-            "default": "Ctrl+6"
+            "default": "Ctrl+Shift+6"
           }
         },
-        "Shortcut7": {
+        "Ctrl+Shift+7": {
           "suggested_key": {
-            "default": "Ctrl+7"
+            "default": "Ctrl+Shift+7"
           }
         },
-        "Shortcut8": {
+        "Ctrl+Shift+8": {
           "suggested_key": {
-            "default": "Ctrl+8"
+            "default": "Ctrl+Shift+8"
           }
         },
-        "Shortcut9": {
+        "Ctrl+Shift+9": {
           "suggested_key": {
-            "default": "Ctrl+9"
+            "default": "Ctrl+Shift+9"
           }
-        },
+        }
       } 
   }
 

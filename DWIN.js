@@ -18,14 +18,14 @@ function handleMessage(request, sender, sendResponse) {
       return Promise.resolve(document.getElementsByTagName('html')[0].innerHTML);
   } else if (request.type == 'paste'){
     console.log('paste working');
-    var text="yooo";
-    navigator.clipboard.writeText(text).then(function() {
+    navigator.clipboard.writeText(request.val).then(function() {
       console.log("sucessful");
+      var t = document.execCommand("paste");
+      console.log(t);
     }, function() {
       console.log("noooooo");
     });
-    var t = document.execCommand("paste", false, text);
-    console.log(t);
+    
   }
 }
 

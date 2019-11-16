@@ -13,8 +13,6 @@ function initial() {
   for (var i = 0; i < numShortcuts; i++) {
     shortcuts.push('');
   }
-
-  shortcuts[1] = 'yeetos';
 }
 
 function rewriteUserAgentHeader(e) {
@@ -65,12 +63,10 @@ function round(val) {
   return val;
 }
 
-function sendMessageToTabs(tabs) {
-  console.log(123);
-  console.log(tabs);
+function sendMessageToTabs(tabs,value) {
   browser.tabs.sendMessage(
     tabs[0].id,
-    { type: 'paste' });
+    { type: 'paste',val:value});
 }
 
 function onError(error) {
@@ -129,19 +125,13 @@ window.setInterval(function () {
 }, 1000 * 60 * 60);
 
 browser.commands.onCommand.addListener(function (command) {
-  if (command === "Shortcut1") {
-    browser.tabs.query({ active: true, currentWindow: true }).then((tab) => sendMessageToTabs(tab));
+  var l = command.split('+');
 
-    /*
-        var text="yooo";
-    var t = document.execCommand("paste", false, text);
-    console.log(t);
-    if (!selection.rangeCount) return false;
-    selection.deleteFromDocument();
-    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-
-    event.preventDefault();
-    */
+  if(l[0]=="Ctrl"&&l[1]=="Shift"&& !isNaN(l[2])){
+    console.log("firing");
+    var value = shortcuts[l[2]-1];
+    console.log(value);
+    browser.tabs.query({ active: true, currentWindow: true }).then((tab) => sendMessageToTabs(tab,value));
   }
 });
 

@@ -22,9 +22,10 @@ class Page {
     document.getElementsByClassName("buttons")[0].style = "color:white;";
     this.selectPage(0);
 
-    document.getElementById('debug').onclick = ()=>{
-      this.selectPage(2)
-    };
+    document.getElementById('debug').onclick = ()=> {
+      this.selectPage(2);
+      this.model.debugPage();
+    }
 
     browser.runtime.sendMessage({ type: 'valid'}).then((msg) => {
       console.log(msg);
@@ -81,6 +82,52 @@ class Model {
     this.cookieType = "";
     //{1:'',2:'',3:'',4:'',5:'',6:'',7:'',8:'',9:''}
   }
+
+  debugPage(){
+      //make the debug table
+      var r = ["amount","channel","orderRef","parts","voucher","currency","test"];
+      var c = ["","IMG","JS","S2S"];
+      document.getElementById("debugTable").innerHTML = this.makeGrid(c,r);
+  }
+
+  makeGrid(column,row){
+    var d = "";
+
+    for(var i=0;i<row.length;i++){
+        if(i==0){
+          console.log("start",this.gridRow(column,column.length));
+          d += this.gridRow(column,column.length);
+        }else{
+          d += this.gridRow([row[i]],column.length);
+        }
+    }
+      
+    return "<table>"+d+"</table>";
+  }
+
+  gridHeaders(val){
+    return "<th>"+val+"</th>";
+  }
+
+  gridData(val){
+    return "<td>"+val+"</td>";
+  }
+
+  gridRow(val,length){
+    var m = "";
+    for(var k=0;k<length;k++) {
+      
+      if(k<val.length){
+        m += this.gridHeaders(val[k]);
+      }else{
+        m += this.gridData("");
+      }
+    }
+    
+    return "<tr>"+m+"</tr>";
+  }
+
+
 
   openHeaders() {
     browser.runtime.sendMessage({ type: 'open' }).then(model.headers.bind(this))
@@ -368,7 +415,6 @@ class Model {
   }
 
   selectCookie(e) {
-    console.log(this);
     for (var i = 0; i < e.target.parentNode.children.length; i++) {
       if (e.target.parentNode.children[i].innerText == e.target.textContent) {
         e.target.parentNode.children[i].style.color = "white";

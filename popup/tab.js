@@ -80,25 +80,82 @@ class Model {
     //Cookie selection and type
     this.cookieSelect = "First";
     this.cookieType = "";
+    this.selectOrder = { 'tt=ns': [], 'tt=js': [], 'basket': [] };
+    this.all = "";
     //{1:'',2:'',3:'',4:'',5:'',6:'',7:'',8:'',9:''}
   }
 
   debugPage(){
       //make the debug table
-      var r = ["amount","channel","orderRef","parts","voucher","currency","test"];
+      var k = {
+        "a":["amount","b"],
+        "b":["channel","ch"],
+        "c":["orderRef","a"],
+        "d":["parts","d"],
+        "e":["voucher","vc"],
+        "f":["currency","cr"],
+        "g":["test","t"]
+      };
       var c = ["","IMG","JS","S2S"];
-      document.getElementById("debugTable").innerHTML = this.makeGrid(c,r);
+
+      var a = [];
+
+      a = this.sortHeaders(this.selectOrder,k,a);
+      document.getElementById("debugTable").innerHTML = this.makeGrid(c,k,a);
+      //this.populateGrid();
+  }
+
+  sortHeaders(headers,cases,l){
+      try{
+        var t = headers[Object.keys(headers)[0]][0].split("?")[1].split("&");
+        var g = headers[Object.keys(headers)[1]][0].split("?")[1].split("&");
+        var mt = t.map(x => x.split('=')[0]);
+        var mg = g.map(x => x.split('=')[0]);
+        //Go through each case
+        for(var j=0;j<Object.keys(cases).length;j++){
+          var b = [];
+          //check if url contains the case
+          const inUrl = (element) => element == cases[j][0] || element == cases[j][1];
+          var val = mt.findIndex(inUrl);
+          var val2 = mg.findIndex(inUrl);
+
+          //missing parameters
+          if(val){
+            b.push(t[val]);
+          }
+          if(val2){
+            b.push(g[val2]);
+          }
+
+          //check for duplicate calls
+          l.push(b);
+        }
+        //http://www.awin1.com/sread.js?a=1807&b=2&cr=GBP&c=123&d=DEFAULT:1&vc=&t=1&ch=3&cks=&l=file%3A///C%3A/Users/Alan%20Ngo/Desktop/Test.html&tv=2&tt=js 
+        //tt=ns&tv=2&merchant={{advertiserId}}&amount={{totalAmount}}&ch={{channel}}&parts={{commissionGroup}}:{{totalAmount}}&vc={{voucher_code}}&cr={{currencyCode}}&ref={{orderReference}}&testmode={{isTest}}
+      }catch(error){
+        console.log(error);
+      }
+    return l
+  }
+
+  populateGrid(){
+    var rows = document.getElementsByTagName("td");
+
+    for(var i=0;i<rows.length;i++){
+
+    }
   }
 
   makeGrid(column,row){
     var d = "";
 
-    for(var i=0;i<row.length;i++){
+    for(var i=0;i<Object.keys(row).length;i++){
         if(i==0){
           console.log("start",this.gridRow(column,column.length));
           d += this.gridRow(column,column.length);
         }else{
-          d += this.gridRow([row[i]],column.length);
+          var r = new Array((row[Object.keys(row)[i]])[0]);
+          d += this.gridRow(r,column.length);
         }
     }
       
@@ -115,6 +172,9 @@ class Model {
 
   gridRow(val,length){
     var m = "";
+
+
+
     for(var k=0;k<length;k++) {
       
       if(k<val.length){
@@ -170,6 +230,18 @@ class Model {
 
     for (var i = 0; i < msg.tracking.length; i++) {
       document.getElementById("tracking").innerHTML += msg.tracking[i].url + "<br/><br/>";
+    }
+
+    
+    for (var i = 0; i < this.obj.tracking.length; i++) {
+      for (var j = 0; j < Object.keys(this.selectOrder).length; j++) {
+        var re = new RegExp(Object.keys(this.selectOrder)[j], 'g');
+        if (this.obj.tracking[i].url.match(re)) {
+          console.log('found one')
+          this.selectOrder[Object.keys(this.selectOrder)[j]].push(decodeURI(this.obj.tracking[i].url));
+        }
+      }
+      this.all += this.obj.tracking[i].url + "\r\n";
     }
   }
 
@@ -256,28 +328,14 @@ class Model {
     }
     header += '\r\n';
 
-    var selectOrder = { 'tt=ns': [], 'tt=js': [], 'basket': [] };
-    var all = "";
-
-    for (var i = 0; i < this.obj.tracking.length; i++) {
-      for (var j = 0; j < Object.keys(selectOrder).length; j++) {
-        var re = new RegExp(Object.keys(selectOrder)[j], 'g');
-        if (this.obj.tracking[i].url.match(re)) {
-          console.log('found one')
-          selectOrder[Object.keys(selectOrder)[j]].push(decodeURI(this.obj.tracking[i].url));
-        }
-      }
-      all += this.obj.tracking[i].url + "\r\n";
-    }
-
     //need to fix for multiple plt
-    for (var element in selectOrder) {
-      header += selectOrder[element] + "\r\n";
+    for (var element in this.selectOrder) {
+      header += this.selectOrder[element] + "\r\n";
     }
 
     header += "\r\n";
 
-    header += all;
+    header += this.all;
 
     this.downloads(this.createBlob(header, 'text/plain'), 'txt');
   }
@@ -333,8 +391,6 @@ class Model {
   createBlob(data, type) {
     return new Blob([data], { type: type });
   }
-
-
 
   screenshot() {
     browser.tabs.captureVisibleTab().then(dataURL => { this.downloads(this.dataURLtoBlob(dataURL), 'jpeg') }, this.onError);

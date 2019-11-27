@@ -119,7 +119,7 @@ class Model {
           var val = mt.findIndex(inUrl);
           var val2 = mg.findIndex(inUrl);
 
-          //missing parameters
+          //need  chech for missing parameters
           if(val){
             b.push(t[val]);
           }
@@ -130,6 +130,7 @@ class Model {
           //check for duplicate calls
           l.push(b);
         }
+        return l;
         //http://www.awin1.com/sread.js?a=1807&b=2&cr=GBP&c=123&d=DEFAULT:1&vc=&t=1&ch=3&cks=&l=file%3A///C%3A/Users/Alan%20Ngo/Desktop/Test.html&tv=2&tt=js 
         //tt=ns&tv=2&merchant={{advertiserId}}&amount={{totalAmount}}&ch={{channel}}&parts={{commissionGroup}}:{{totalAmount}}&vc={{voucher_code}}&cr={{currencyCode}}&ref={{orderReference}}&testmode={{isTest}}
       }catch(error){
@@ -146,7 +147,7 @@ class Model {
     }
   }
 
-  makeGrid(column,row){
+  makeGrid(column,row,data){
     var d = "";
 
     for(var i=0;i<Object.keys(row).length;i++){

@@ -88,18 +88,20 @@ class Model {
   debugPage(){
       //make the debug table
       var k = {
-        "a":["amount","b"],
-        "b":["channel","ch"],
-        "c":["orderRef","a"],
+        "a":["merchant","a"],
+        "b":["ref","c"],
+        "c":["amount","b"],
         "d":["parts","d"],
-        "e":["voucher","vc"],
-        "f":["currency","cr"],
-        "g":["test","t"]
+        "e":["channel","ch"],
+        "f":["voucher","vc"],
+        "g":["currency","cr"],
+        "h":["testmode","t"]
       };
       var c = ["","IMG","JS","S2S"];
 
       var a = [];
 
+      console.log(this.selectOrder);
       a = this.sortHeaders(this.selectOrder,k,a);
       document.getElementById("debugTable").innerHTML = this.makeGrid(c,k,a);
       //this.populateGrid();
@@ -107,24 +109,27 @@ class Model {
 
   sortHeaders(headers,cases,l){
       try{
-        var t = headers[Object.keys(headers)[0]][0].split("?")[1].split("&");
-        var g = headers[Object.keys(headers)[1]][0].split("?")[1].split("&");
+        var t = headers["tt=ns"][0].split("?")[1].split("&");
+        var g = headers["tt=js"][0].split("?")[1].split("&");
         var mt = t.map(x => x.split('=')[0]);
         var mg = g.map(x => x.split('=')[0]);
         //Go through each case
         for(var j=0;j<Object.keys(cases).length;j++){
           var b = [];
-          //check if url contains the case
-          const inUrl = (element) => element == cases[j][0] || element == cases[j][1];
+          //check if url parameters are in
+          //console.log(cases[Object.keys(cases)[j]][1]);
+          const inUrl = (element) => element == cases[Object.keys(cases)[j]][0] || element == cases[Object.keys(cases)[j]][1];
           var val = mt.findIndex(inUrl);
+          
           var val2 = mg.findIndex(inUrl);
-
+          //console.log(val2);
+          console.log(g[val2].split('=')[1]+"asdasdasw");
           //need  chech for missing parameters
-          if(val){
-            b.push(t[val]);
+          if(val!=-1){
+            b.push(t[val].split('=')[1]);
           }
-          if(val2){
-            b.push(g[val2]);
+          if(val2!=-1){
+            b.push(g[val2].split('=')[1]);
           }
 
           //check for duplicate calls
@@ -142,25 +147,57 @@ class Model {
   populateGrid(){
     var rows = document.getElementsByTagName("td");
 
+    /*
+        ":["amount","b"],
+        "b":["channel","ch"],
+        "c":["orderRef","a"],
+        "d":["parts","d"],
+        "e":["voucher","vc"],
+        "f":["currency","cr"],
+        "g":["test","t"]
+
+    */
     for(var i=0;i<rows.length;i++){
 
     }
   }
 
   makeGrid(column,row,data){
+    //html
     var d = "";
 
-    for(var i=0;i<Object.keys(row).length;i++){
+    for(var i=0;i<Object.keys(row).length+1;i++){
         if(i==0){
           console.log("start",this.gridRow(column,column.length));
           d += this.gridRow(column,column.length);
         }else{
-          var r = new Array((row[Object.keys(row)[i]])[0]);
+          //console.log(data);
+          var r = new Array((row[Object.keys(row)[i-1]])[0]);
+          for(var k=0;k<data[i-1].length;k++){
+            r.push(data[i-1][k]);
+          }
           d += this.gridRow(r,column.length);
         }
     }
       
     return "<table>"+d+"</table>";
+  }
+
+  gridRow(val,length){
+    var m = "";
+
+    //loop through ns js s2s
+    for(var k=0;k<length;k++) {
+      //if value 
+      if(k<val.length){
+        m += this.gridHeaders(val[k]);
+      }else{
+        //instead of blank fill with something else
+        m += this.gridData("");
+      }
+    }
+    
+    return "<tr>"+m+"</tr>";
   }
 
   gridHeaders(val){
@@ -170,24 +207,6 @@ class Model {
   gridData(val){
     return "<td>"+val+"</td>";
   }
-
-  gridRow(val,length){
-    var m = "";
-
-
-
-    for(var k=0;k<length;k++) {
-      
-      if(k<val.length){
-        m += this.gridHeaders(val[k]);
-      }else{
-        m += this.gridData("");
-      }
-    }
-    
-    return "<tr>"+m+"</tr>";
-  }
-
 
 
   openHeaders() {
@@ -254,6 +273,7 @@ class Model {
     }
 
     var dd = this.round(date.getDate());
+    console.log(date.getMonth()+"month")
     var mm = this.round(date.getMonth()) + 1;
     var yyyy = date.getFullYear();
 

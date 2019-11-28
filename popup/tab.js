@@ -111,36 +111,39 @@ class Model {
       try{
         var t = headers["tt=ns"][0].split("?")[1].split("&");
         var g = headers["tt=js"][0].split("?")[1].split("&");
+        
         var mt = t.map(x => x.split('=')[0]);
         var mg = g.map(x => x.split('=')[0]);
         //Go through each case
         for(var j=0;j<Object.keys(cases).length;j++){
-          var b = [];
-          //check if url parameters are in
-          //console.log(cases[Object.keys(cases)[j]][1]);
           const inUrl = (element) => element == cases[Object.keys(cases)[j]][0] || element == cases[Object.keys(cases)[j]][1];
-          var val = mt.findIndex(inUrl);
-          
+          var b = [];
+
+
+          var val = mt.findIndex(inUrl);         
           var val2 = mg.findIndex(inUrl);
-          //console.log(val2);
-          console.log(g[val2].split('=')[1]+"asdasdasw");
           //need  chech for missing parameters
-          if(val!=-1){
+          if(val!=-1 && t!=undefined){
             b.push(t[val].split('=')[1]);
           }
-          if(val2!=-1){
+          if(val2!=-1 && g!=undefined){
             b.push(g[val2].split('=')[1]);
           }
 
           //check for duplicate calls
           l.push(b);
         }
+
+
+
+
         return l;
         //http://www.awin1.com/sread.js?a=1807&b=2&cr=GBP&c=123&d=DEFAULT:1&vc=&t=1&ch=3&cks=&l=file%3A///C%3A/Users/Alan%20Ngo/Desktop/Test.html&tv=2&tt=js 
         //tt=ns&tv=2&merchant={{advertiserId}}&amount={{totalAmount}}&ch={{channel}}&parts={{commissionGroup}}:{{totalAmount}}&vc={{voucher_code}}&cr={{currencyCode}}&ref={{orderReference}}&testmode={{isTest}}
       }catch(error){
         console.log(error);
       }
+      console.log(l,"asdasd")
     return l
   }
 
@@ -258,7 +261,7 @@ class Model {
         var re = new RegExp(Object.keys(this.selectOrder)[j], 'g');
         if (this.obj.tracking[i].url.match(re)) {
           console.log('found one')
-          this.selectOrder[Object.keys(this.selectOrder)[j]].push(decodeURI(this.obj.tracking[i].url));
+          this.selectOrder[Object.keys(this.selectOrder)[j]].push(decodeURIComponent(this.obj.tracking[i].url));
         }
       }
       this.all += this.obj.tracking[i].url + "\r\n";
@@ -266,24 +269,20 @@ class Model {
   }
 
   getFormattedDate(sepDate, sepTime, time, full = false) {
-    var date = new Date();
-
-    if (typeof time == undefined) {
-      date.setUTCSeconds(time);
-    }
-
-    var dd = this.round(date.getDate());
-    console.log(date.getMonth()+"month")
-    var mm = this.round(date.getMonth()) + 1;
-    var yyyy = date.getFullYear();
-
-    var fDate = dd + sepDate + mm + sepDate + yyyy;
-    var fTime = this.round(date.getHours()) + sepTime + this.round(date.getMinutes())
-
-    if (full) {
-      return fDate;
-    } else {
-      return fDate + ' ' + fTime;
+    if (typeof time != undefined) {
+      var date = new Date(time*1000);
+      var dd = this.round(date.getDate());
+      var mm = this.round(date.getMonth()) + 1;
+      var yyyy = date.getFullYear();
+  
+      var fDate = dd + sepDate + mm + sepDate + yyyy;
+      var fTime = this.round(date.getHours()) + sepTime + this.round(date.getMinutes())
+  
+      if (full) {
+        return fDate;
+      } else {
+        return fDate + ' ' + fTime;
+      }
     }
   }
 
@@ -462,6 +461,7 @@ class Model {
   }
 
   checkCookies(c, val) {
+
     var ind = null;
     if (val != null) {
       for (var i = 0; i < c.length; i++) {
@@ -474,10 +474,11 @@ class Model {
       }
 
       if(ind != null){
+        console.log( c[ind]['expirationDate'],"cookiiesss",model.getFormattedDate("/", ":", c[ind]['expirationDate']));
         var string = '<div> ' +
         '<b>Name:</b> ' + c[ind]['name'] + '</br>' +
         '<b>Value:</b> ' + c[ind]['value'] + '</br>' +
-        '<b>Expiry date:</b> ' + model.getFormattedDate("/", ":", c[i]['expirationDate']) + ' ' + '<br/> ' +
+        '<b>Expiry date:</b> ' + model.getFormattedDate("/", ":", c[ind]['expirationDate']) + ' ' + '<br/> ' +
         '<b>Secure:</b> ' + model.checkbox(c[ind]['secure']) + ' ' +
         '<b>httpOnly:</b> ' + model.checkbox(c[ind]['httpOnly']) + ' ' +
         '<b>Session:</b> ' + model.checkbox(c[ind]['session']) + ' ' +

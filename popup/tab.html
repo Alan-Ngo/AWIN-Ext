@@ -11,94 +11,81 @@
 </head>
 
 <body>
-  <div id="popup-content">
-    <div id="main2">
-      <div style="display:flex;flex-direction: row;">
-        <div class="h">
-          <h3>AWIN Integrations Plugin</h3>
-        </div>
+  <div class="popup-content">
+    <div class="title">
+      <h3>Integrations Plugin</h3>
+    </div>
+    <div style="padding:10px;">
+      <div id="cookie_buttons">
+        <div class="buttons">First</div>
+        <div class="buttons">Third</div>
+        <div class="buttons">S2S</div>
+        <div class="buttons">Other</div>
       </div>
-      <div style="padding:10px;">
-        <div style="display: flex;text-align: center;">
-          <div class="buttons">First</div>
-          <div class="buttons">Third</div>
-          <div class="buttons">S2S</div>
-          <div class="buttons">Other</div>
-        </div>
-        <div id="cookies">
-          <div id="cookie"></div>
-        </div>
-        <div id="t_container">
-          <div id="tracking"></div>
-          <input type="checkbox" id="debug" name="simple" value="Y">Debug<br />
-          <div class="clear button extra">Clear headers</div>
-        </div>
-        <div id='f_container'>
-          <div style="display: flex;">
-            <div title="Screenshot" style="flex:1" class="screenshot button "><i class="fas fa-lg fa-desktop"></i></div>
-            <div title="Save Header" style="flex:1" class="saveHeader button "><i class="fas fa-lg fa-code"></i></div>
-            <div title="Save Page" style="flex:1" class="savePage button "><i class="fas fa-lg fa-file"></i></div>
-            <div title="Delete Cookie" style="flex:1" class="delCookie button "><i class="fas fa-lg fa-cookie-bite"></i>
-            </div>
+      <div id="cookies">
+        <div id="cookie"></div>
+      </div>
+      <div id="t_container">
+        <div id="tracking"></div>
+        <input type="checkbox" id="debug" name="simple" value="Y">Debug<br />
+        <div class="clear button extra">Clear headers</div>
+      </div>
+      <div id='f_container'>
+        <div style="display: flex;">
+          <div title="Screenshot" style="flex:1" class="screenshot button "><i class="fas fa-lg fa-desktop"></i></div>
+          <div title="Save Header" style="flex:1" class="saveHeader button "><i class="fas fa-lg fa-code"></i></div>
+          <div title="Save Page" style="flex:1" class="savePage button "><i class="fas fa-lg fa-file"></i></div>
+          <div title="Delete Cookie" style="flex:1" class="delCookie button "><i class="fas fa-lg fa-paste"></i>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="cookie-content">
-    <div id="main">
-      <div style="display:flex;flex-direction: row;">
-        <div style="width:10%;align-items: center;background-color: #7ec2ed;">
+  <div class="popup-content">
+      <div class="title row_direction">
+        <div style="width:10%;">
           <div style="align-items: center;">
             <h3 class="back fas fa-arrow-left"></h3>
           </div>
         </div>
-        <div style="background-color: #7ec2ed;width: 90%;">
+        <div style="width: 90%;">
           <h3>Cookies</h3>
         </div>
       </div>
-      <div id="listCookies" style="overflow-y: scroll;height: 90%;overflow-wrap: break-word;padding:10px;">
-      </div>
-    </div>
+      <div id="listCookies" style="overflow-y: scroll;height:420px;overflow-wrap: break-word;padding:10px;box-sizing: border-box;"></div>
   </div>
 
-  <div id="debug-content">
-    <div id="main2">
-      <div style="display:flex;flex-direction: row;">
-        <div style="width:10%;align-items: center;background-color: #7ec2ed;">
+  <div class="popup-content">
+      <div class="title row_direction">
+        <div style="width:10%;">
           <div style="align-items: center;">
             <h3 class="back fas fa-arrow-left"></h3>
           </div>
         </div>
-        <div style="background-color: #7ec2ed;width: 90%;">
+        <div style="width: 90%;">
           <h3>Debugging</h3>
         </div>
       </div>
-
-      <div id="debugTable">
-
-      </div>
-    </div>
+      <div id="debugTable"></div>
   </div>
 
-  <div id="shortcut-content">
-    <div id="main2">
-      <div style="display:flex;flex-direction: row;">
-        <div style="width:10%;align-items: center;background-color: #7ec2ed;">
+  <div class="popup-content">
+      <div class="title row_direction">
+        <div style="width:10%;">
           <div style="align-items: center;">
             <h3 class="back fas fa-arrow-left"></h3>
           </div>
         </div>
-        <div style="background-color: #7ec2ed;width: 90%;">
+        <div style="width: 90%;">
           <h3>Shortcuts</h3>
         </div>
       </div>
       <div id="shortcut" style="padding:10px">
 
       </div>
-    </div>
   </div>
+
   <script src="tab.js"></script>
 
 </body>

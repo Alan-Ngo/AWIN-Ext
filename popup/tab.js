@@ -1,14 +1,14 @@
 class Page {
   constructor(mod) {
-    this.pages = ["popup-content", "cookie-content", "debug-content", "shortcut-content"];
     this.fields = ["tracking", "cookie"];
     this.model = mod;
     this.initialSetup();
   }
 
   selectPage(pageNum) {
-    for (var i = 0; i < this.pages.length; i++) {
-      document.getElementById(this.pages[i]).style.display = (pageNum == i) ? "grid" : "none";
+    
+    for (var i = 0; i < document.getElementsByClassName("popup-content").length; i++) {
+      document.getElementsByClassName("popup-content")[i].style.display = (pageNum == i) ? "grid" : "none";
     }
   }
 
@@ -19,7 +19,13 @@ class Page {
   }
 
   initialSetup() {
-    document.getElementsByClassName("buttons")[0].style = "color:white;";
+    var x = document.getElementsByClassName("buttons");
+    for(var i=0;i<x.length;i++){
+      if(i!=0){
+        x[i].style = "background-color:rgba(96,164,207,1);";
+      }
+    }
+    //document.getElementsByClassName("buttons")[0].style = "color:white;";
     this.selectPage(0);
 
     document.getElementById('debug').onclick = () => {
@@ -134,9 +140,6 @@ class Model {
         l.push(b);
       }
 
-
-
-
       return l;
       //http://www.awin1.com/sread.js?a=1807&b=2&cr=GBP&c=123&d=DEFAULT:1&vc=&t=1&ch=3&cks=&l=file%3A///C%3A/Users/Alan%20Ngo/Desktop/Test.html&tv=2&tt=js 
       //tt=ns&tv=2&merchant={{advertiserId}}&amount={{totalAmount}}&ch={{channel}}&parts={{commissionGroup}}:{{totalAmount}}&vc={{voucher_code}}&cr={{currencyCode}}&ref={{orderReference}}&testmode={{isTest}}
@@ -145,24 +148,6 @@ class Model {
     }
     console.log(l, "asdasd")
     return l
-  }
-
-  populateGrid() {
-    var rows = document.getElementsByTagName("td");
-
-    /*
-        ":["amount","b"],
-        "b":["channel","ch"],
-        "c":["orderRef","a"],
-        "d":["parts","d"],
-        "e":["voucher","vc"],
-        "f":["currency","cr"],
-        "g":["test","t"]
-
-    */
-    for (var i = 0; i < rows.length; i++) {
-
-    }
   }
 
   makeGrid(column, row, data) {
@@ -226,7 +211,7 @@ class Model {
     browser.runtime.sendMessage({ type: 'short' }).then((msg) => {
       var s = '';
       for (var i = 0; i < msg.length; i++) {
-        s += '<b>ctrl ' + (i + 1) + '</b>&nbsp;<input class="sInput" type="text" value=' + msg[i] + '><button class="sButtons">Updates</button> <br>';
+        s += '<b>ctrl+shift+' + (i + 1) + '</b>&nbsp;<input class="sInput" type="text" value=' + msg[i] + '><button class="sButtons">Update</button> <br>';
       }
 
       document.getElementById('shortcut').innerHTML = s;
@@ -279,12 +264,9 @@ class Model {
     var date = new Date();
     if (time != undefined) {
       var date = new Date(time * 1000);
-      console.log("change date");
-      // date.setUTCSeconds(time);
     }
 
     var dd = this.round(date.getDate());
-    console.log(dd);
     var mm = this.round(date.getMonth() + 1);
     var yyyy = date.getFullYear();
 
@@ -370,7 +352,7 @@ class Model {
       var tab = tabs[0];
       var url = new URL(tab.url)
       //Regex does not do without the font www
-      var patt = /\.[a-z]+\./g;
+      var patt = /\.[^\.]+\./g;
 
       try {
         var domain = ((url.hostname).match(patt).toString()).slice(1, -1);
@@ -378,17 +360,15 @@ class Model {
         var domain = url.hostname;
       }
 
-      var patt = /\.[a-z]+\./g;
-
+      document.getElementById("listCookies").innerHTML = "";
       for (var i = 0; i < cook.length; i++) {
         if ((cook[i]["domain"]).indexOf(domain) != -1) {
           var string = '<div class="cookieList"> ' +
             '<b>Name:</b> ' + cook[i]['name'] + '</br>' +
             '<b>Value:</b> ' + cook[i]['value'] + '</br>' +
             '<b>Expiry date:</b> ' + model.getFormattedDate("/", ":", cook[i]['expirationDate']) + '<br/> ' +
-            '<b>Secure:</b> ' + model.checkbox(cook[i]['secure']) + ' ' +
-            '<b>httpOnly:</b> ' + model.checkbox(cook[i]['httpOnly']) + ' ' +
-            '<b>Session:</b> ' + model.checkbox(cook[i]['session']) + ' ' +
+            '<b>httpOnly:</b>' + model.checkbox(cook[i]['httpOnly']) + ' ' +
+            '<b>Session:</b>' + model.checkbox(cook[i]['session']) + ' ' +
             '<button class="selectCookie" name="' + cook[i]['name'] + '">Select</button>' +
             '</div></br>';
           document.getElementById("listCookies").innerHTML += string;
@@ -484,9 +464,9 @@ class Model {
           '<b>Name:</b> ' + c[ind]['name'] + '</br>' +
           '<b>Value:</b> ' + c[ind]['value'] + '</br>' +
           '<b>Expiry date:</b> ' + model.getFormattedDate("/", ":", c[ind]['expirationDate']) + ' ' + '<br/> ' +
-          '<b>Secure:</b> ' + model.checkbox(c[ind]['secure']) + ' ' +
-          '<b>httpOnly:</b> ' + model.checkbox(c[ind]['httpOnly']) + ' ' +
-          '<b>Session:</b> ' + model.checkbox(c[ind]['session']) + ' ' +
+          '<b>Secure:</b>' + model.checkbox(c[ind]['secure']) + ' ' +
+          '<b>httpOnly:</b>' + model.checkbox(c[ind]['httpOnly']) + ' ' +
+          '<b>Session:</b>' + model.checkbox(c[ind]['session']) + ' ' +
           '</div></br>';
 
         document.getElementById("cookie").innerHTML = string;
@@ -500,13 +480,13 @@ class Model {
   selectCookie(e) {
     for (var i = 0; i < e.target.parentNode.children.length; i++) {
       if (e.target.parentNode.children[i].innerText == e.target.textContent) {
-        e.target.parentNode.children[i].style.color = "white";
+        e.target.parentNode.children[i].style.backgroundColor = "rgba(126,194,237,1)";
         //set mode
         console.log(this.cookieSelect);
         this.cookieSelect = e.target.textContent;
         console.log(this.cookieSelect);
       } else {
-        e.target.parentNode.children[i].style.color = "black";
+        e.target.parentNode.children[i].style.backgroundColor = "rgba(96,164,207,1)";
       }
     }
     //get the correct value to populate
